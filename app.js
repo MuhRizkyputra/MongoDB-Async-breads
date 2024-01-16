@@ -7,8 +7,9 @@ const { MongoClient } = require('mongodb');
 
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
-const dbName = 'datadb';
 
+
+const dbName = 'datadb';
 async function main() {
 
   await client.connect();
@@ -20,16 +21,13 @@ async function main() {
 
 main()
 
-
   .then((db) => {
 
-    var indexRouter = require('./routes/index')(db);
-    var usersRouter = require('./routes/users')(db);  
-    var todosRouter = require('./routes/todos')(db);
+    // var indexRouter = require('./routes/index')(db);
+    var usersRouter = require('./routes/users')(db);
+    // var todosRouter = require('./routes/todos')(db);
 
     var app = express();
-
-    // view engine setup
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'ejs');
 
@@ -39,13 +37,28 @@ main()
     app.use(cookieParser());
     app.use(express.static(path.join(__dirname, 'public')));
 
-    app.use('/', indexRouter);
+    // app.use('/', indexRouter);
     app.use('/api/users', usersRouter);
-    app.use('/api/todos', todosRouter);
+    // app.use('/api/todos', todosRouter);
+
+    // catch 404 and forward to error handler
+    app.use(function (req, res, next) {
+      next(createError(404));
+    });
+
+    // error handler
+    app.use(function (err, req, res, next) {
+      // set locals, only providing error in development
+      res.locals.message = err.message;
+      res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+      // render the error page
+      res.status(err.status || 500);
+      res.render('error');
+    });
 
     var debug = require('debug')('mongodbbread:server');
     var http = require('http');
-
 
     /**
  * Get port from environment and store in Express.
@@ -127,23 +140,6 @@ main()
         : 'port ' + addr.port;
       debug('Listening on ' + bind);
     }
-
-
-    // catch 404 and forward to error handler
-    app.use(function (req, res, next) {
-      next(createError(404));
-    });
-
-    // error handler
-    app.use(function (err, req, res, next) {
-      // set locals, only providing error in development
-      res.locals.message = err.message;
-      res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-      // render the error page
-      res.status(err.status || 500);
-      res.render('error');
-    });
 
     module.exports = app;
   }).catch((err) => {
