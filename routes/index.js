@@ -1,9 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+module.exports = function (db) {
 
-module.exports = router;
+router.get('/', function(req, res, next) {
+  res.render('index');
+});
+router.get('/users/:id/todos', function(req, res, next) {
+  res.render('todolist', { userid: req.params.id});
+});
+return router;
+}
