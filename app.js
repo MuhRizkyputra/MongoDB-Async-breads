@@ -25,7 +25,7 @@ main()
 
     // var indexRouter = require('./routes/index')(db);
     var usersRouter = require('./routes/users')(db);
-    // var todosRouter = require('./routes/todos')(db);
+    var todosRouter = require('./routes/todos')(db);
 
     var app = express();
     app.set('views', path.join(__dirname, 'views'));
@@ -39,7 +39,7 @@ main()
 
     // app.use('/', indexRouter);
     app.use('/api/users', usersRouter);
-    // app.use('/api/todos', todosRouter);
+    app.use('/api/todos', todosRouter);
 
     // catch 404 and forward to error handler
     app.use(function (req, res, next) {

@@ -11,7 +11,6 @@ module.exports = function (db) {
 
     try {
       const data = await User.find().toArray()
-      console.log('test', data)
       res.status(200).json({ data })
     } catch {
       res.status(500).json(err)
