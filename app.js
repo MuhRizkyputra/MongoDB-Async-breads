@@ -23,9 +23,10 @@ main()
 
   .then((db) => {
 
-    // var indexRouter = require('./routes/index')(db);
+    var indexRouter = require('./routes/index')(db);
     var usersRouter = require('./routes/users')(db);
     var todosRouter = require('./routes/todos')(db);
+
 
     var app = express();
     app.set('views', path.join(__dirname, 'views'));
@@ -37,7 +38,7 @@ main()
     app.use(cookieParser());
     app.use(express.static(path.join(__dirname, 'public')));
 
-    // app.use('/', indexRouter);
+    app.use('/', indexRouter);
     app.use('/api/users', usersRouter);
     app.use('/api/todos', todosRouter);
 
