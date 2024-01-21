@@ -31,7 +31,7 @@ const readData = async function () {
             <td>${item.phone}</td>
             <td>
             <button class="btn btn-success" onclick="getoneData('${item._id}')" type="button" data-bs-toggle="modal" data-bs-target="addData"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-danger" onclick="getoneData('${item._id}')" data-bs-toggle="modal" data-bs-target="deleteData"><i class="fa-solid fa-trash"></i></button>
+            <button class="btn btn-danger" onclick="getId('${item._id}')" data-bs-toggle="modal" data-bs-target="#deleteData" style="color:white;"><i class="fa-solid fa-trash"></i></button>
             <a href="/users/${item._id}/todos" class="btn btn-warning"><i class="fa-solid fa-right-to-bracket"></i></a>
             </td>
             </tr>`
@@ -63,20 +63,17 @@ const addData = async () => {
     }
 }
 
-const editData = async => {
-
-}
 
 const deleteData = async () => {
     try {
         const response = await fetch(`http://localhost:3000/api/users/${id}`, {
             method: 'DELETE',
             headers: {
-                "Content-type": "application/json"
+                "Content-Type": "application/json"
             }
         })
     } catch (err) {
-        alert('falied to delete data users')
+        alert('failed to delete data users')
     }
     readData()
 }
