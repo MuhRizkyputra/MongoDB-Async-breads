@@ -6,6 +6,14 @@ let data = ``
 function getId(_id) {
     id = _id
 }
+
+let addButton = document.getElementById('addButton')
+addButton.onclick = () => {
+    conditional = true
+    const name = document.getElementById('name').value = ""
+    const phone = document.getElementById('phone').value = ""
+}
+
 const readData = async function () {
     try {
         const response = await fetch(`http://localhost:3000/api/users`);
@@ -34,19 +42,32 @@ const addData = async () => {
     const name = document.getElementById('name').value
     const phone = document.getElementById('phone').value
     try {
-        const response = await fetch (`http://localhost:3000/api/users` , {
-        method: "POST",
-        headers: {
-            "Content-type": "application/json"
-        },
-        body: JSON.stringify({ name , phone})
-    })
-    const user = await respone.json()
-    document.getElementById('name').value = ""
-    document.getElementById('phone').value = ""
-    readData()
-    } catch (error) {
-        alert('failed to read data users')
-
+        const response = await fetch(`http://localhost:3000/api/users`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({ name, phone })
+        })
+        const user = await response.json()
+        document.getElementById('name').value = ""
+        document.getElementById('phone').value = ""
+        readData()
+    } catch (err) {
+        alert('falied to add data users')
     }
+}
+
+const deleteData = async () => {
+    try {
+        const response = await fetch(`http://localhost:3000/api/users/${id}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-type": "application/json"
+            }
+        })
+    } catch (err) {
+        alert('falied to add data users')
+    }
+    readData()
 }
