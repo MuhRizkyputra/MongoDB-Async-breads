@@ -14,6 +14,11 @@ addButton.onclick = () => {
     const phone = document.getElementById('phone').value = ""
 }
 
+let button = document.getElementById('mybutton')
+button.onclick = () => {
+    conditional ? addData () : editData()
+}
+
 const readData = async function () {
     try {
         const response = await fetch(`http://localhost:3000/api/users`);
@@ -58,6 +63,10 @@ const addData = async () => {
     }
 }
 
+const editData = async => {
+
+}
+
 const deleteData = async () => {
     try {
         const response = await fetch(`http://localhost:3000/api/users/${id}`, {
@@ -67,7 +76,7 @@ const deleteData = async () => {
             }
         })
     } catch (err) {
-        alert('falied to add data users')
+        alert('falied to delete data users')
     }
     readData()
 }
