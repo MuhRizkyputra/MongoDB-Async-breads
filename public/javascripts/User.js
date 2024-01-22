@@ -7,6 +7,11 @@ function getId(_id) {
     id = _id
 }
 
+const deleteModal = new bootstrap.Modal(document.getElementById('deleteData'), {
+    keyboard: false
+});
+
+
 let addButton = document.getElementById('addButton')
 addButton.onclick = () => {
     conditional = true
@@ -16,7 +21,12 @@ addButton.onclick = () => {
 
 let button = document.getElementById('mybutton')
 button.onclick = () => {
-    conditional ? addData () : editData()
+    conditional ? addData() : editData()
+}
+
+function showDelete(_id) {
+    deleteModal.show()
+    id = _id
 }
 
 const readData = async function () {
@@ -31,7 +41,8 @@ const readData = async function () {
             <td>${item.phone}</td>
             <td>
             <button class="btn btn-success" onclick="getoneData('${item._id}')" type="button" data-bs-toggle="modal" data-bs-target="addData"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-danger" onclick="getId('${item._id}')" data-bs-toggle="modal" data-bs-target="#deleteData" style="color:white;"><i class="fa-solid fa-trash"></i></button>
+            <button class="btn btn-danger" onclick="showDelete('${item._id}')" data-bs-toggle="modal" data-bs-target="#deleteData"><i
+            class="fa-solid fa-trash" data-bs-toggle="modal"></i></button>&nbsp;
             <a href="/users/${item._id}/todos" class="btn btn-warning"><i class="fa-solid fa-right-to-bracket"></i></a>
             </td>
             </tr>`
@@ -63,6 +74,19 @@ const addData = async () => {
     }
 }
 
+const getoneData = async (id) => {
+    conditional = false
+    try {
+        const response = await fetch(`http://localhost:3000/api/users/${id}`)
+        const user = await response.json()
+        getId(user._id)
+        document.getElementById('name').value = user.name
+        document.getElementById('phone').value = user.phone
+    } catch (err) {
+        alert('failed to get one data users')
+    }
+}
+
 
 const deleteData = async () => {
     try {
@@ -72,8 +96,10 @@ const deleteData = async () => {
                 "Content-Type": "application/json"
             }
         })
+        const users = await response.json()
+        readData()
+        deleteModal.hide()
     } catch (err) {
         alert('failed to delete data users')
     }
-    readData()
 }
