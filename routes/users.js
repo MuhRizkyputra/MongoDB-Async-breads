@@ -8,11 +8,22 @@ module.exports = function (db) {
 
 
   router.get('/', async function (req, res, next) {
-
     try {
-      const data = await User.find().toArray()
-      res.status(200).json({ data })
-    } catch {
+      const { page = 1, limit = 5, query = '', sortBy, sortMode } = req.query
+      const params = {}
+      const sort = {}
+      sort[sortBy] = sortMode
+      const offset = (page - 1) * limit
+      console.log(query)
+      if (query) {
+        params['$or'] = [{ "name": new RegExp(query, 'i') }, { "phone": new RegExp(query, 'i') }]
+      }
+      const total = await User.count(params)
+      const pages = Math.ceil(total / limit)
+      
+      const users = await User.find(params).sort(sort).limit(Number(limit)).skip(offset).toArray()
+      res.json({ data: users, limit: Number(limit), page : Number(page), pages, offset, total })
+    } catch (err) {
       res.status(500).json(err)
     }
   })

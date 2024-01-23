@@ -82,6 +82,28 @@ h1 {
   margin: 5px 0px 0px 10px;
 }
 
+.paginations {
+  margin-left: 60%;
+  width: 100%;
+}
+
+.page {
+  display: flex;
+  flex-direction: row;
+  margin-right: 5px;
+}
+
+.showPage {
+  display: flex;
+  margin-top: 15px;
+  margin-right: 20px;
+}
+
+.page-link {
+  margin-top: 10px;
+  cursor: pointer;
+}
+
 .container {
   margin: auto;
   margin-top: 10px;
