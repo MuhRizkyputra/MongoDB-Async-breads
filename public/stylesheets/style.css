@@ -116,23 +116,14 @@ h1 {
   border-radius: 10px;
 }
 
-.inside {
-  background-color: white;
-  padding: 5px 15px;
-}
-
-.inline {
-  display: flex;
+input {
   width: 100%;
-  padding: 5px;
-  margin-top: 10px;
+  padding: 10px;
+  font-size: medium;
+  border-radius: 8px;
+  border-style: solid;
+  border-color: whitesmoke;
 }
-
-.contain-input {
-  float: right;
-  width: 90%;
-}
-
 .deadline {
   box-sizing: border-box;
   display: block;
@@ -182,4 +173,52 @@ h1 {
 .dlDate :last-child {
   float: right;
   margin-top: 4px;
+}
+.rowcomplete {
+  box-sizing: border-box;
+  padding: 0px 5px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+
+.rowcomplete select {
+  float: right;
+  width: 80%;
+  border: 2px solid whitesmoke;
+  background-color: white;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: medium;
+}
+.findcluster{
+  display: flex;
+    margin-top: 15px;
+}
+.search-button{
+  margin-left: 8.2%;
+}
+.addTodo{
+  border-top: 1px solid #ddd;
+  background-color: #f8f8f8;
+  padding: 10px;
+}
+.addTodo input{
+  height: 37px;
+  margin-top: 5px;
+  width: 95.5%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding-left: 10px;
+}
+.addTodo button{
+  margin-top: -4px;
+}
+#todos-list{
+  background-color: #f2f2f2;
+}
+.todoslist {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
 }
