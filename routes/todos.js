@@ -8,14 +8,45 @@ module.exports = function (db) {
 
 
     router.get('/', async function (req, res, next) {
+      try {
+          const { page = 1, limit = 10, title, complete, startDeadline, endDeadline, sortBy = '_id', sortMode = 'desc', executor } = req.query
+          const params = {}
+          const sort = {}
+          sort[sortBy] = sortMode
+          const offset = (page - 1) * limit
 
-        try {
-          const data = await Todo.find().toArray()
-          res.status(200).json({ data })
-        } catch {
+          if (title) {
+              params['title'] = new RegExp(title, 'i')
+          }
+
+          if (startDeadline && endDeadline) {
+              params['deadline'] = {
+                  $gte: new Date(startDeadline),
+                  $lte: new Date(endDeadline)
+              }
+          } else if (startDeadline) {
+              params['deadline'] = { $gte: new Date(startDeadline) }
+          } else if (endDeadline) {
+              params['deadline'] = { $lte: new Date(endDeadline) }
+          }
+
+          if (complete) {
+              params['complete'] = JSON.parse(complete)
+          }
+          if (executor) {
+              params['executor'] = new ObjectId(executor)
+          }
+          const total = await Todo.count(params)
+          const pages = Math.ceil(total / limit)
+          console.log(params)
+          
+
+          const todos = await Todo.find(params).sort(sort).limit(Number(limit)).skip(offset).toArray()
+          res.json({ data: todos, limit: Number(limit), page, pages, total })
+      } catch (err) {
           res.status(500).json(err)
-        }
-      })
+      }
+  })
     
 
     router.get('/:id', async function (req, res) {
