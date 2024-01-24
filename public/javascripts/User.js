@@ -58,7 +58,7 @@ const reset = () => {
     sortMode = 'desc'
     let defaultName = `<a onclick="sortNameAsc('name')"><i class="fa-solid fa-sort"
     style="color: #000000;"></i></a>&nbsp;Name`
-    let defaulPhone = `<a onclick="sortPhoneAsc('phone')"><i class="fa-solid fa-sort"
+    let defaultPhone = `<a onclick="sortPhoneAsc('phone')"><i class="fa-solid fa-sort"
     style="color: #000000;"></i></a>&nbsp;Phone`
     query = ''
 
@@ -66,15 +66,30 @@ const reset = () => {
     document.getElementById('sort-phone').innerHTML = defaultPhone
     loadData()
 }
+
+const sortNameAsc = (name) => {
+    sortBy = name
+    sortMode = 'asc'
+    let random = `<a type="button" onclick="sortPhoneAsc('name')"><i class="fa-solid fa-sort"></i></a>Phone</th>`
+    let sortAsc = `
+    <a type="button" onclick="sortNameDesc('name')"><i class="fa-solid fa-sort-up"></i></a>
+    <span>Name</span>
+    `
+
+    document.getElementById(`sort-name`).innerHTML = sortAsc
+    document.getElementById(`sort-phone`).innerHTML = random
+    loadData()
+}
+
 async function loadData() {
     try {
-        const response = await fetch(`http://localhost:3000/api/users?query=${query}&page=${page}&limit=${limit}&sortBy=${sortBy}&sortMode=${sortMode}`);
+const response = await fetch(`http://localhost:3000/api/users?query=${query}&page=${page}&limit=${limit}&sortBy=${sortBy}&sortMode=${sortMode}`);
         const users = await response.json();
-        console.log(users)
         const offset = users.offset
         let html = ''
         let pagination = ''
         let pageNumber = ''
+
         users.data.forEach((item, index) => {
             html += `<tr>
             <td>
@@ -90,15 +105,15 @@ async function loadData() {
                   class="fa-solid fa-pencil"></i></button>&nbsp;
               <button class="btn btn-danger" onclick="showDelete('${item._id}')" data-bs-toggle="modal" data-bs-target="#deleteData"><i
                   class="fa-solid fa-trash" data-bs-toggle="modal"></i></button>&nbsp;
-                  <a href="/users/${item._id}/todos" class="btn btn-warning"><i class="fa-solid fa-right-to-bracket"></i></a>
+                  <a href="/users/${item._id}/todoslist" class="btn btn-warning"><i class="fa-solid fa-right-to-bracket"></i></a>
             </td>
-          
+
           </tr>`
         });
         for (let i = 1; i <= users.pages; i++) {
-            pageNumber += `<a class="page-link ${page == i ? ' active' : ''} " ${users.pages == 1 ? `style =border-radius:4px;` : ''} ${i == 1 && page == i ? `style="border-top-left-radius:4px; border-bottom-left-radius:5px;"` : ''}  ${i == users.pages && page == i ? `style="border-top-right-radius:4px; border-bottom-right-radius:5px;"` : ''} id="button-pagination" onclick="changePage(${i})">${i}</a>`
-
+            pageNumber += `<a class="page-link ${page == i ? ' active' : ''} " ${users.pages == 1 ? ` style =border-radius:4px;` : ''} ${i == 1 && page == i ? `style="border-top-left-radius:4px; border-bottom-left-radius:5px;"` : ''} ${i == users.pages && page == i ? `style="border-top-right-radius:4px; border-bottom-right-radius:5px;"` : ''} id="button-pagination" onclick = "changePage(${i})">${i}</a> `
         }
+
 
         if (document.getElementById('limit').value == 0) {
             pagination += `
@@ -117,81 +132,16 @@ async function loadData() {
         </div>
         `
         }
-
         document.getElementById('button-pagination').innerHTML = pagination
         document.getElementById('tbody').innerHTML = html
 
     } catch (error) {
-        console.log('ngebug', error)
+        alert('failet to load data')
 
     }
 
 }
-
 loadData()
-
-
-// async function loadData() {
-//     try {
-//         const response = await fetch(`http://localhost:3000/api/users?query=${query}&page={page}&limit=${limit}`);
-//         const users = await response.json();
-//         const offset = users.offset
-//         let html = ''
-//         let pagination = ''
-//         let pageNumber = ''
-
-//         users.data.forEach((item, index) => {
-//             html += `<tr>
-//             <td>
-//               ${index + 1 + offset}
-//             </td>
-//             <td>
-//               ${item.name}
-//             </td>
-//             <td>
-//               ${item.phone}
-//             </td>
-//             <td><button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editData" onclick="showUpdate('${item._id}', '${item.name}', '${item.phone}')"><i
-//                   class="fa-solid fa-pencil"></i></button>&nbsp;
-//               <button class="btn btn-danger" onclick="showDelete('${item._id}')" data-bs-toggle="modal" data-bs-target="#deleteData"><i
-//                   class="fa-solid fa-trash" data-bs-toggle="modal"></i></button>&nbsp;
-//                   <a href="/users/${item._id}/todoslist" class="btn btn-warning"><i class="fa-solid fa-right-to-bracket"></i></a>
-//             </td>
-          
-//           </tr>`
-//         });
-//         for (let i = 1; i <= users.pages; i++) {
-//             pageNumber += `<a class="page-link ${page == i ? ' active' : ''} " ${users.pages == 1 ? ` style =border-radius:4px;` : ''} ${i == 1 && page == i ? `style="border-top-left-radius:4px; border-bottom-left-radius:5px;"` : ''} ${i == users.pages && page == i ? `style="border-top-right-radius:4px; border-bottom-right-radius:5px;"` : ''} id="button-pagination" onclick = "changePage(${i})">${i}</a> `
-//         }
-
-
-//         if (document.getElementById('limit').value == 0) {
-//             pagination += `
-//         <span class="showPage">Showing ${users.offset + 1} to ${users.total} of ${users.total} entries </span>
-//         <div class="page">
-//         <a class="page-link active" style="border-radius:6px" id="button-pagination">1</a>
-//         </div>
-//         `
-//         } else {
-//             pagination = `
-//         <span class="showPage">Showing ${users.offset + 1} to ${(Number(limit) + Number(users.offset)) >= users.total ? Number(users.total) : Number(limit) + Number(users.offset)} of ${users.total} entries </span>
-//         <div class="page">
-//         ${users.page == 1 ? '' : '<a onclick="changePage(page - 1)" style="border-top-left-radius:4px; border-bottom-left-radius:4px;" class="page-link" arial-lable="back"><span arial-hidden = true">&laquo</span></a>'}
-//         ${pageNumber}
-//         ${users.page == users.pages ? '' : '<a onclick="changePage(page + 1)" class="page-link" style="border-top-right-radius:4px; border-bottom-right-radius:4px;" arial-lable="next"><span arial-hidden = true">&raquo</span></a>'}
-//         </div>
-//         `
-//         }
-//         document.getElementById('button-pagination').innerHTML = pagination
-//         document.getElementById('tbody').innerHTML = html
-
-//     } catch (error) {
-//         alert('failet to load data')
-
-//     }
-
-// }
-// loadData()
 
 
 async function addData() {
