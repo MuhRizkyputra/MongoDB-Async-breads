@@ -139,7 +139,7 @@ async function loadData() {
                   class="fa-solid fa-pencil"></i></button>&nbsp;
               <button class="btn btn-danger" onclick="showDelete('${item._id}')" data-bs-toggle="modal" data-bs-target="#deleteData"><i
                   class="fa-solid fa-trash" data-bs-toggle="modal"></i></button>&nbsp;
-                  <a href="/users/${item._id}/todoslist" class="btn btn-warning"><i class="fa-solid fa-right-to-bracket"></i></a>
+                  <a href="/users/${item._id}/todos" class="btn btn-warning"><i class="fa-solid fa-right-to-bracket"></i></a>
             </td>
 
           </tr>`
@@ -191,6 +191,7 @@ async function addData() {
             body: JSON.stringify({ name, phone }),
         });
         const { data } = await response.json()
+        page = 1
         loadData()
         formModal.hide()
     } catch (error) {
